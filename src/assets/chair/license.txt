@@ -1,0 +1,11 @@
+Model Information:
+* title:	Mr. Jones armchair
+* source:	https://sketchfab.com/3d-models/mr-jones-armchair-9194d087fde243e08ab708f0cac0c007
+* author:	Free_model (https://sketchfab.com/Free_model)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Mr. Jones armchair" (https://sketchfab.com/3d-models/mr-jones-armchair-9194d087fde243e08ab708f0cac0c007) by Free_model (https://sketchfab.com/Free_model) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
