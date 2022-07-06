@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 
 
 @Component({
@@ -15,7 +16,7 @@ export class CubeComponent implements OnInit, AfterViewInit {
   private canvasRef: ElementRef | undefined;
 
   rotationSpeedX: number = 0.001;
-  rotationSpeedY: number = 0.0005;
+  rotationSpeedY: number = 0.005;
   size: number = 200;
   texture: string = ""
 
@@ -52,6 +53,7 @@ export class CubeComponent implements OnInit, AfterViewInit {
   // controls = new OrbitControls(this.camera, this.renderer.domElement);
 
   loader = new GLTFLoader();
+  loader2 = new FBXLoader();
   loadedModel: any;
   light1 = new THREE.DirectionalLight(0xffffff, 0.8);
   light2 = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -89,12 +91,29 @@ export class CubeComponent implements OnInit, AfterViewInit {
 
 
   animateCube() {
-    this.cube.rotation.x += this.rotationSpeedX;
-    this.cube.rotation.y += this.rotationSpeedY;
+    // this.cube.rotation.x += this.rotationSpeedX;
+    // this.cube.rotation.y += this.rotationSpeedY;
 
-
+    console.log('hi');
     // this.loadedModel.rotation.x += this.rotationSpeedX;
     this.loadedModel.rotation.y += this.rotationSpeedY;
+
+    this.spotlight1.rotation.y += this.rotationSpeedY;
+    this.spotlight2.rotation.y += this.rotationSpeedY;
+    this.spotlight3.rotation.y += this.rotationSpeedY;
+    this.spotlight4.rotation.y += this.rotationSpeedY;
+    this.spotlight5.rotation.y += this.rotationSpeedY;
+    this.spotlight6.rotation.y += this.rotationSpeedY;
+
+  }
+
+  animateCube2() {
+    // this.cube.rotation.x += this.rotationSpeedX;
+    // this.cube.rotation.y += this.rotationSpeedY;
+
+    console.log('00');
+    // this.loadedModel.rotation.x += this.rotationSpeedX;
+    this.loadedModel.rotation.y += this.rotationSpeedY*1.5;
 
     this.spotlight1.rotation.y += this.rotationSpeedY;
     this.spotlight2.rotation.y += this.rotationSpeedY;
@@ -109,10 +128,10 @@ export class CubeComponent implements OnInit, AfterViewInit {
   createScene() {
     //* Scene
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color('grey')
+    // this.scene.background = new THREE.Color('grey')
     // this.scene.background = new THREE.Color('#363333')
     // this.scene.background = new THREE.Color('#2A246F')
-    // this.scene.background = new THREE.Color('#121111')
+    this.scene.background = new THREE.Color('#d4d6d9')
     // this.scene.add(this.cube);
     // Light
     this.light1.position.set(5,0,0);
@@ -194,7 +213,7 @@ export class CubeComponent implements OnInit, AfterViewInit {
 
     
     this.gridHelper.position.y = -2;
-    this.scene.add(this.gridHelper);
+    // this.scene.add(this.gridHelper);
 
     // this.scene.add(this.ambientLight);
     // this.scene.add(this.lightHelper1)
@@ -212,6 +231,7 @@ export class CubeComponent implements OnInit, AfterViewInit {
       this.farClippingPlane
     )
     this.camera.position.z = this.cameraZ;
+    this.camera.position.y = 50;
 
     this.loader.load('../../assets/chair 2.2.glb', (gltf)=>{
 
@@ -222,12 +242,35 @@ export class CubeComponent implements OnInit, AfterViewInit {
       this.loadedModel = gltf.scene;
       this.scene.add(gltf.scene);
       
-      console.log(gltf);
+      console.log("hi",gltf);
     }, (xhr)=>{
       console.log(xhr.loaded/xhr.total*100) + "% loaded";
     },(err)=>{
       console.log("Error!", err);
     })
+
+    // this.loader2.load('../../assets/chair 2.fbx', 
+    //   (object) => {
+    //     // object.traverse(function (child) {
+    //     //     if ((child as THREE.Mesh).isMesh) {
+    //     //         (child as THREE.Mesh).material = new THREE.MeshNormalMaterial();
+    //     //         if ((child as THREE.Mesh).material) {
+    //     //             ((child as THREE.Mesh).material as THREE.MeshBasicMaterial).transparent = false
+    //     //         }
+    //     //     }
+    //     // })
+    //     object.scale.set(.005, .005, .005);
+    //     object.position.y = -2;
+    //     this.loadedModel = object;
+    //     this.scene.add(object)
+    //   },
+    //   (xhr) => {
+    //       console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+    //     },
+    //   (error) => {
+    //       console.log(error)
+    //     }
+    //   )
   }
 
   getAspectRatio() {
@@ -242,13 +285,36 @@ export class CubeComponent implements OnInit, AfterViewInit {
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
+    this.renderer.render(this.scene, this.camera)
+
     let component: CubeComponent = this;
-    (function render() {
+
+    var startTime = new Date().getTime();
+    let interval = setInterval(function render() {
+
+      if(new Date().getTime() - startTime > 1200){
+        clearInterval(interval);
+        return;
+      }
+
+      requestAnimationFrame(render);
+      component.animateCube2();
+      // component.controls.update();
+      component.renderer.render(component.scene, component.camera);
+
+    }, 100);
+    // // cancel interval after 1 second (1000 ms)
+    // setTimeout(() => clearInterval(interval), 3000)
+
+    // let component: CubeComponent = this;
+    setTimeout(function render() {
       requestAnimationFrame(render);
       component.animateCube();
       component.controls.update();
       component.renderer.render(component.scene, component.camera);
-    }());
+
+      // setTimeout(component.animateCube, 2000);
+    }, 1000);
   }
 
 }
